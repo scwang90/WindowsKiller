@@ -43,34 +43,34 @@ protected:
 		TCHAR	e_tName[VAR_NAME_SIZE];		// Variable Name
 		BYTE	e_tValue;                   // Value
 	}*LpVar8;
-	typedef	struct FVar8 {
+	typedef	struct FileVar8 {
 		LONG	e_tName;					// address of Variable Name
 		BYTE	e_tValue;                   // Value
-	}*LpFVar8;
+	}*LpFileVar8;
 	typedef	struct Var16 {
 		TCHAR	e_tName[VAR_NAME_SIZE];		// Variable Name
 		WORD	e_tValue;                   // Value
 	}*LpVar16;
-	typedef	struct FVar16 {
+	typedef	struct FileVar16 {
 		LONG	e_tName;					// address of Variable Name
 		WORD	e_tValue;                   // Value
-	}*LpFVar16;
+	}*LpFileVar16;
 	typedef	struct Var32 {
 		TCHAR	e_tName[VAR_NAME_SIZE];		// Variable Name
 		DWORD	e_tValue;                   // Value
 	}*LpVar32;
-	typedef	struct FVar32 {
+	typedef	struct FileVar32 {
 		LONG	e_tName;					// address of Variable Name
 		DWORD	e_tValue;                   // Value
-	}*LpFVar32;
+	}*LpFileVar32;
 	typedef	struct Var64 {
 		TCHAR	e_tName[VAR_NAME_SIZE];		// Variable Name
 		double	e_tValue;                   // Value
 	}*LpVar64;
-	typedef	struct FVar64 {
+	typedef	struct FileVar64 {
 		LONG	e_tName;					// address of Variable Name
 		double	e_tValue;                   // Value
-	}*LpFVar64;
+	}*LpFileVar64;
 	typedef	struct VarString {
 		TCHAR	e_tName[VAR_NAME_SIZE];		// Variable Name
 		union {
@@ -78,13 +78,13 @@ protected:
 			LONG	e_tAddres;
 		};
 	}*LpVarString;
-	typedef	struct FVarString {
+	typedef	struct FileVarString {
 		LONG	e_tName;					// address of Variable Name
 		union {
 			PTSTR	e_tValue;               // Value
 			LONG	e_tAddres;
 		};
-	}*LpFVarString;
+	}*LpFileVarString;
 	typedef	struct VarStruct {
 		TCHAR	e_tName[VAR_NAME_SIZE];		// Strcut Name
 		size_t	e_tSize;					// Strcut Size
@@ -93,14 +93,14 @@ protected:
 			LONG	e_tAddres;
 		};
 	}*LpVarStruct;
-	typedef	struct FVarStruct {
+	typedef	struct FileVarStruct {
 		LONG	e_tName;					// address of Variable Name
 		size_t	e_tSize;					// Strcut Size
 		union {
 			PVOID	e_tValue;               // Value
 			LONG	e_tAddres;
 		};
-	}*LpFVarStruct;
+	}*LpFileVarStruct;
 
 	typedef	struct Variable {
 		Variable()
@@ -122,16 +122,16 @@ protected:
 			struct { PVOID pAdd[6]; };
 		};
 	}*LpVariable;
-	typedef	struct FVariable {
-		FVariable()
-			:pFVar8(NULL)
-			, pFVar16(NULL)
-			, pFVar32(NULL)
-			, pFVar64(NULL)
-			, pFVarString(NULL)
-			, pFVarStruct(NULL) {}
+	typedef	struct FileVariable {
+		FileVariable()
+			:pFileVar8(NULL)
+			, pFileVar16(NULL)
+			, pFileVar32(NULL)
+			, pFileVar64(NULL)
+			, pFileVarString(NULL)
+			, pFileVarStruct(NULL) {}
 
-		~FVariable()
+		~FileVariable()
 		{
 			for (int i = 0; i < 6; i++)
 			{
@@ -144,16 +144,16 @@ protected:
 		}
 		union {
 			struct {
-				LpFVar8			pFVar8;
-				LpFVar16		pFVar16;
-				LpFVar32		pFVar32;
-				LpFVar64		pFVar64;
-				LpFVarString	pFVarString;
-				LpFVarStruct	pFVarStruct;
+				LpFileVar8			pFileVar8;
+				LpFileVar16		pFileVar16;
+				LpFileVar32		pFileVar32;
+				LpFileVar64		pFileVar64;
+				LpFileVarString	pFileVarString;
+				LpFileVarStruct	pFileVarStruct;
 			};
 			struct { PVOID pFAdd[6]; };
 		};
-	}*LpFVariable;
+	}*LpFileVariable;
 
 protected:
 	void FreeData();
@@ -161,7 +161,7 @@ protected:
 	bool CheckFileMap();
 	long GetTypeSize(WORD vType);
 	long GetTypeVarSize(WORD vType);
-	long GetTypeFVarSize(WORD vType);
+	long GetTypeFileVarSize(WORD vType);
 	void ReadFileMap(LPVOID lpBase, LpFileHeader pFileHeader, LpTypeHeader pTypeHeader);
 	bool AddVarValue(WORD vType, long wSize, LPBYTE lpByte, LPCTSTR lpName, LPCVOID pDefaut);
 	long AddVarValue(LPBYTE lpByte, WORD wType, WORD wSize, LPTYPEDATA lpTypeData, int nLength);
@@ -172,10 +172,10 @@ protected:
 	long AddVarStruct(long nType, LPTYPEDATA lpTypeData, int nLength);
 	void* MemAllocate(void* address, size_t newsize);
 	long GetTypeData(WORD wType, LPTYPEDATA lpTypeData, int nLength);
-	void MapFile(FVariable &cFVariable, TypeElerment eType[], LpVarString &pVarString, LpVarStruct &pVarStruct);
-	BOOL SaveData(FVariable &cFVariable, TypeElerment eType[], LpVarString &pVarString, LpVarStruct &pVarStruct);
+	void MapFile(FileVariable &cFileVariable, TypeElerment eType[], LpVarString &pVarString, LpVarStruct &pVarStruct);
+	BOOL SaveData(FileVariable &cFileVariable, TypeElerment eType[], LpVarString &pVarString, LpVarStruct &pVarStruct);
 	LPBYTE FindVarValue(WORD vType, LPCTSTR lpName);
-	//IFileEngine	1.2 V
+	//IFileEngine 1.2 V
 	LPBYTE FindVarValue(WORD vType, int index);
 
 public:
