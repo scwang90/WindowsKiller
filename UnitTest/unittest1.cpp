@@ -3,6 +3,7 @@
 #include "CppUnitTest.h"
 #include "../FileEngine/IFileEngine.h"
 
+using namespace std;
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 // {F3EBADDA-2200-4d05-9D7F-8B7A14714D76}
@@ -33,7 +34,9 @@ namespace UnitTest
 			float testFloat = 9.9f;
 			double testDouble = 99.99;
 			TCHAR testString[] = TEXT("Test String");
-			RECT testStruct = {1,2,3,4};
+			TCHAR testString2[] = TEXT("Test String 2");
+			RECT testStruct = { 1,2,3,4 };
+			RECT testStruct2 = { 4,3,2,1 };
 
 			TYPEDATA cTypeData[] = {
 			{ IFileEngine::VT_CHAR	,TEXT("TD_VALUE_VT_CHAR	 ")	,LPCVOID(testChar),TD_VALUE },
@@ -46,7 +49,9 @@ namespace UnitTest
 			{ IFileEngine::VT_FLOAT ,TEXT("TD_VALUE_VT_FLOAT ")	,LPCVOID(&testFloat),TD_ADDRESS },
 			{ IFileEngine::VT_DOUBLE,TEXT("TD_VALUE_VT_DOUBLE")	,LPCVOID(&testDouble),TD_ADDRESS },
 			{ IFileEngine::VT_STRING,TEXT("TD_VALUE_VT_STRING")	,LPCVOID(testString), lstrlen(testString) + 1 },
+			{ IFileEngine::VT_STRING,TEXT("TD_VALUE_VT_STRING2")	,LPCVOID(testString2), lstrlen(testString2) + 1 },
 			{ IFileEngine::VT_STRUCT,TEXT("TD_VALUE_VT_STRUCT")	,LPCVOID(&testStruct),sizeof(RECT) },
+			{ IFileEngine::VT_STRUCT,TEXT("TD_VALUE_VT_STRUCT2")	,LPCVOID(&testStruct2),sizeof(RECT) },
 			};
 
 			TCHAR szFileName[] = TEXT("UnitTestFile.data");
@@ -69,33 +74,68 @@ namespace UnitTest
 			long readLong = 0;
 			float readFloat = 0;
 			double readDouble = 0;
-			TCHAR readString[MAX_PATH] = {0};
-			RECT readStuct = {0};
+			TCHAR readString[MAX_PATH] = { 0 };
+			TCHAR readString2[MAX_PATH] = { 0 };
+			RECT readStruct = { 0 };
+			RECT readStruct2 = { 0 };
 			DllFileEngine::DllCoCreateObject(CLSID_IFileEngine, IID_IFileEngine, (void**)(&ptrFileEngine));
 			ptrFileEngine->OpenFile(szFileName);
-			ptrFileEngine->GetVarValue(IFileEngine::VT_CHAR, TEXT("TD_VALUE_VT_CHAR	 "), &readChar);
-			ptrFileEngine->GetVarValue(IFileEngine::VT_BYTE, TEXT("TD_VALUE_VT_BYTE	 "), &readByte);
-			ptrFileEngine->GetVarValue(IFileEngine::VT_BOOL, TEXT("TD_VALUE_VT_BOOL	 "), &readBool);
-			ptrFileEngine->GetVarValue(IFileEngine::VT_SHORT, TEXT("TD_VALUE_VT_SHORT "), &readShort);
-			ptrFileEngine->GetVarValue(IFileEngine::VT_WORD, TEXT("TD_VALUE_VT_WORD	 "), &readWord);
-			ptrFileEngine->GetVarValue(IFileEngine::VT_INT, TEXT("TD_VALUE_VT_INT	 "), &readInt);
-			ptrFileEngine->GetVarValue(IFileEngine::VT_LONG, TEXT("TD_VALUE_VT_LONG	 "), &readLong);
-			ptrFileEngine->GetVarValue(IFileEngine::VT_FLOAT, TEXT("TD_VALUE_VT_FLOAT "), &readFloat);
-			ptrFileEngine->GetVarValue(IFileEngine::VT_DOUBLE, TEXT("TD_VALUE_VT_DOUBLE"), &readDouble);
-			ptrFileEngine->GetVarString(TEXT("TD_VALUE_VT_STRING"), readString, MAX_PATH);
-			ptrFileEngine->GetVarStruct(TEXT("TD_VALUE_VT_STRUCT"), &testStruct);
 
-			_tprintf(_T("readChar = %c, %d"), readChar, readChar == testChar);
-			_tprintf(_T("readByte = %d, %d"), readByte, readByte == testByte);
-			_tprintf(_T("readBool = %d, %d"), readBool, readBool == testBool);
-			_tprintf(_T("readShort = %d, %d"), readShort, readShort == testShort);
-			_tprintf(_T("readWord = %d, %d"), readWord, readWord == testWord);
-			_tprintf(_T("readInt = %d, %d"), readInt, readInt == testInt);
-			_tprintf(_T("readLong = %d, %d"), readLong, readLong == testLong);
-			_tprintf(_T("readFloat = %f, %d"), readFloat, readFloat == testFloat);
-			_tprintf(_T("readDouble = %lf, %d"), readDouble, readDouble == testDouble);
-			_tprintf(_T("readString = %s, %d"), readString, lstrcmp(readString,testString));
-			//_tprintf(_T("testStruct = %ld, %d"), readChar, readChar == testChar);
+			TCHAR szLog[MAX_PATH] = TEXT("");
+			TCHAR szTemp[MAX_PATH] = TEXT("");
+			wsprintf(szTemp, TEXT("\r\nVT_CHAR - %d"), ptrFileEngine->GetVarValue(IFileEngine::VT_CHAR, TEXT("TD_VALUE_VT_CHAR	 "), &readChar));
+			lstrcat(szLog, szTemp);
+			wsprintf(szTemp, TEXT("\r\nVT_BYTE - %d"), ptrFileEngine->GetVarValue(IFileEngine::VT_BYTE, TEXT("TD_VALUE_VT_BYTE	 "), &readByte));
+			lstrcat(szLog, szTemp);
+			wsprintf(szTemp, TEXT("\r\nVT_BOOL - %d"), ptrFileEngine->GetVarValue(IFileEngine::VT_BOOL, TEXT("TD_VALUE_VT_BOOL	 "), &readBool));
+			lstrcat(szLog, szTemp);
+			wsprintf(szTemp, TEXT("\r\nVT_SHORT - %d"), ptrFileEngine->GetVarValue(IFileEngine::VT_SHORT, TEXT("TD_VALUE_VT_SHORT "), &readShort));
+			lstrcat(szLog, szTemp);
+			wsprintf(szTemp, TEXT("\r\nVT_WORD - %d"), ptrFileEngine->GetVarValue(IFileEngine::VT_WORD, TEXT("TD_VALUE_VT_WORD	 "), &readWord));
+			lstrcat(szLog, szTemp);
+			wsprintf(szTemp, TEXT("\r\nVT_INT - %d"), ptrFileEngine->GetVarValue(IFileEngine::VT_INT, TEXT("TD_VALUE_VT_INT	 "), &readInt));
+			lstrcat(szLog, szTemp);
+			wsprintf(szTemp, TEXT("\r\nVT_LONG - %d"), ptrFileEngine->GetVarValue(IFileEngine::VT_LONG, TEXT("TD_VALUE_VT_LONG	 "), &readLong));
+			lstrcat(szLog, szTemp);
+			wsprintf(szTemp, TEXT("\r\nVT_FLOAT - %d"), ptrFileEngine->GetVarValue(IFileEngine::VT_FLOAT, TEXT("TD_VALUE_VT_FLOAT "), &readFloat));
+			lstrcat(szLog, szTemp);
+			wsprintf(szTemp, TEXT("\r\nVT_DOUBLE - %d"), ptrFileEngine->GetVarValue(IFileEngine::VT_DOUBLE, TEXT("TD_VALUE_VT_DOUBLE"), &readDouble));
+			lstrcat(szLog, szTemp);
+			wsprintf(szTemp, TEXT("\r\nTD_VALUE_VT_STRING - %d"), ptrFileEngine->GetVarString(TEXT("TD_VALUE_VT_STRING"), readString, MAX_PATH));
+			lstrcat(szLog, szTemp);
+			wsprintf(szTemp, TEXT("\r\nTD_VALUE_VT_STRING2 - %d"), ptrFileEngine->GetVarString(TEXT("TD_VALUE_VT_STRING2"), readString2, MAX_PATH));
+			lstrcat(szLog, szTemp);
+			wsprintf(szTemp, TEXT("\r\nTD_VALUE_VT_STRUCT - %d"), ptrFileEngine->GetVarStruct(TEXT("TD_VALUE_VT_STRUCT"), &readStruct));
+			lstrcat(szLog, szTemp);
+			wsprintf(szTemp, TEXT("\r\nTD_VALUE_VT_STRUCT1 - %d"), ptrFileEngine->GetVarStruct(TEXT("TD_VALUE_VT_STRUCT2"), &readStruct2));
+			lstrcat(szLog, szTemp);
+
+			wsprintf(szTemp,_T("readChar = %c, %d\n"), readChar, readChar == testChar);
+			wsprintf(szTemp,_T("readByte = %d, %d\n"), readByte, readByte == testByte);
+			wsprintf(szTemp,_T("readBool = %d, %d\n"), readBool, readBool == testBool);
+			wsprintf(szTemp,_T("readShort = %d, %d\n"), readShort, readShort == testShort);
+			wsprintf(szTemp,_T("readWord = %d, %d\n"), readWord, readWord == testWord);
+			wsprintf(szTemp,_T("readInt = %d, %d\n"), readInt, readInt == testInt);
+			wsprintf(szTemp,_T("readLong = %d, %d\n"), readLong, readLong == testLong);
+			wsprintf(szTemp,_T("readFloat = %f, %d\n"), readFloat, readFloat == testFloat);
+			wsprintf(szTemp, _T("readDouble = %lf, %d\n"), readDouble, readDouble == testDouble);
+			wsprintf(szTemp, _T("readString = %s, %d\n"), readString, lstrcmp(readString, testString));
+			wsprintf(szTemp, _T("readString2 = %s, %d\n"), readString2, lstrcmp(readString2, testString2));
+			//wsprintf(szTemp, _T("testStruct = %ld, %d"), readChar, readChar == testChar);
+			Assert::IsTrue( readChar == testChar);
+			Assert::IsTrue( readByte == testByte);
+			Assert::IsTrue( readBool == testBool);
+			Assert::IsTrue( readShort == testShort);
+			Assert::IsTrue( readWord == testWord);
+			Assert::IsTrue( readInt == testInt);
+			Assert::IsTrue( readLong == testLong);
+			Assert::IsTrue( readFloat == testFloat);
+			Assert::IsTrue( readDouble == testDouble);
+			Assert::IsTrue(lstrcmp(readString, testString));
+			Assert::IsTrue(lstrcmp(readString2, testString2));
+			//Assert::IsTrue(readStruct == testStruct);
+
+			
 
 		}
 
