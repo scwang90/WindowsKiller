@@ -16,89 +16,89 @@ public:
 protected:
 	typedef struct FileHeader {
 		FileHeader()
-			:e_magic(WORD(IMAGE_SIGNATURE_FILE))
-			, e_version(m_dwVersion)
-			, e_ldescribe(WORD(sizeof(TCHAR)*lstrlen(m_lpDescribe)))
-			, e_lfanew(LONG(sizeof(FileHeader) + sizeof(TCHAR)*lstrlen(m_lpDescribe) + sizeof(TCHAR))) {}
-		WORD	e_magic;                    // Magic number
-		WORD	e_version;					// version Code
-		WORD	e_ldescribe;				// length of describe
-		LONG	e_lfanew;                   // File address of new type header
+			:magic(WORD(IMAGE_SIGNATURE_FILE))
+			, version(m_dwVersion)
+			, ldescribe(WORD(sizeof(TCHAR)*lstrlen(m_lpDescribe)))
+			, ptrTypeHeader(LONG(sizeof(FileHeader) + sizeof(TCHAR)*(lstrlen(m_lpDescribe)+1))) {}
+		WORD	magic;                    // Magic number
+		WORD	version;					// version Code
+		WORD	ldescribe;				// length of describe
+		LONG	ptrTypeHeader;            // File address of new type header
 	}*LpFileHeader;
 	typedef	struct TypeHeader {
 		TypeHeader()
-			:e_magic(WORD(IMAGE_SIGNATURE_TYPE))
-			, e_ntype(WORD(BVT_ALLTYPE))
-			, e_lfanew(LONG(sizeof(TypeHeader) + sizeof(FileHeader) + sizeof(TCHAR)*lstrlen(m_lpDescribe) + sizeof(TCHAR))) {}
-		WORD	e_magic;                    // Magic number
-		WORD	e_ntype;					// type number
-		LONG	e_lfanew;                   // File address of new type Elerment
+			:magic(WORD(IMAGE_SIGNATURE_TYPE))
+			, ntype(WORD(BVT_ALLTYPE))
+			, ptrTypeElement(LONG(sizeof(TypeHeader) + sizeof(FileHeader) + sizeof(TCHAR)*(lstrlen(m_lpDescribe)+1))) {}
+		WORD	magic;                    // Magic number
+		WORD	ntype;					// type number
+		LONG	ptrTypeElement;           // File address of new type Element
 	}*LpTypeHeader;
-	typedef	struct TypeElerment {
-		WORD	e_vType;                    // Type
-		WORD	e_nVar;						// Variable number
-		LONG	e_lfanew;					// File address of new type Variable
-	}*LpTypeElerment;
+	typedef	struct TypeElement {
+		WORD	vType;                    // Type
+		WORD	nVar;						// Variable number
+		LONG	ptrTypeVariable;			// File address of new type Variable
+	}*LpTypeElement;
 	typedef	struct Var8 {
-		TCHAR	e_tName[VAR_NAME_SIZE];		// Variable Name
-		BYTE	e_tValue;                   // Value
+		TCHAR	tName[VAR_NAME_SIZE];		// Variable Name
+		BYTE	tValue;                     // Value
 	}*LpVar8;
 	typedef	struct FileVar8 {
-		LONG	e_tName;					// address of Variable Name
-		BYTE	e_tValue;                   // Value
+		LONG	tName;					// address of Variable Name
+		BYTE	tValue;                   // Value
 	}*LpFileVar8;
 	typedef	struct Var16 {
-		TCHAR	e_tName[VAR_NAME_SIZE];		// Variable Name
-		WORD	e_tValue;                   // Value
+		TCHAR	tName[VAR_NAME_SIZE];		// Variable Name
+		WORD	tValue;                   // Value
 	}*LpVar16;
 	typedef	struct FileVar16 {
-		LONG	e_tName;					// address of Variable Name
-		WORD	e_tValue;                   // Value
+		LONG	tName;					// address of Variable Name
+		WORD	tValue;                   // Value
 	}*LpFileVar16;
 	typedef	struct Var32 {
-		TCHAR	e_tName[VAR_NAME_SIZE];		// Variable Name
-		DWORD	e_tValue;                   // Value
+		TCHAR	tName[VAR_NAME_SIZE];		// Variable Name
+		DWORD	tValue;                   // Value
 	}*LpVar32;
 	typedef	struct FileVar32 {
-		LONG	e_tName;					// address of Variable Name
-		DWORD	e_tValue;                   // Value
+		LONG	tName;					// address of Variable Name
+		DWORD	tValue;                   // Value
 	}*LpFileVar32;
 	typedef	struct Var64 {
-		TCHAR	e_tName[VAR_NAME_SIZE];		// Variable Name
-		double	e_tValue;                   // Value
+		TCHAR	tName[VAR_NAME_SIZE];		// Variable Name
+		__int64	tValue;                   // Value
 	}*LpVar64;
 	typedef	struct FileVar64 {
-		LONG	e_tName;					// address of Variable Name
-		double	e_tValue;                   // Value
+		LONG	tName;					// address of Variable Name
+		__int64	tValue;                   // Value
 	}*LpFileVar64;
 	typedef	struct VarString {
-		TCHAR	e_tName[VAR_NAME_SIZE];		// Variable Name
+		TCHAR	tName[VAR_NAME_SIZE];		// Variable Name
 		union {
-			PTSTR	e_tValue;               // Value
-			LONG	e_tAddres;
+			PTSTR	tValue;               // Value
+			LONG	tAddres;
 		};
 	}*LpVarString;
 	typedef	struct FileVarString {
-		LONG	e_tName;					// address of Variable Name
+		LONG	tName;					// address of Variable Name
 		union {
-			PTSTR	e_tValue;               // Value
-			LONG	e_tAddres;
+			PTSTR	tValue;               // Value
+			LONG	tAddres;
 		};
 	}*LpFileVarString;
 	typedef	struct VarStruct {
-		TCHAR	e_tName[VAR_NAME_SIZE];		// Strcut Name
-		size_t	e_tSize;					// Strcut Size
+		TCHAR	tName[VAR_NAME_SIZE];		// Strcut Name
+		size_t	tSize;					// Strcut Size
 		union {
-			PVOID	e_tValue;               // Value
-			LONG	e_tAddres;
+			PVOID	tValue;               // Value
+			LONG	tAddres;
 		};
 	}*LpVarStruct;
 	typedef	struct FileVarStruct {
-		LONG	e_tName;					// address of Variable Name
-		size_t	e_tSize;					// Strcut Size
+		LONG	tName;					// address of Variable Name
+		size_t	tSize;					// Strcut Size
 		union {
-			PVOID	e_tValue;               // Value
-			LONG	e_tAddres;
+			PVOID	tValue;               // Value
+			LONG	tAddres;
 		};
 	}*LpFileVarStruct;
 
@@ -122,9 +122,12 @@ protected:
 			struct { PVOID pAdd[6]; };
 		};
 	}*LpVariable;
+	/*
+	 * 再文件中的变量
+	 */
 	typedef	struct FileVariable {
 		FileVariable()
-			:pFileVar8(NULL)
+			: pFileVar8(NULL)
 			, pFileVar16(NULL)
 			, pFileVar32(NULL)
 			, pFileVar64(NULL)
@@ -135,23 +138,23 @@ protected:
 		{
 			for (int i = 0; i < 6; i++)
 			{
-				if (pFAdd[i])
+				if (pFileAdd[i])
 				{
-					free(pFAdd[i]);
-					pFAdd[i] = NULL;
+					free(pFileAdd[i]);
+					pFileAdd[i] = NULL;
 				}
 			}
 		}
 		union {
 			struct {
-				LpFileVar8			pFileVar8;
+				LpFileVar8		pFileVar8;
 				LpFileVar16		pFileVar16;
 				LpFileVar32		pFileVar32;
 				LpFileVar64		pFileVar64;
 				LpFileVarString	pFileVarString;
 				LpFileVarStruct	pFileVarStruct;
 			};
-			struct { PVOID pFAdd[6]; };
+			struct { PVOID pFileAdd[6]; };
 		};
 	}*LpFileVariable;
 
@@ -159,8 +162,8 @@ protected:
 	void FreeData();
 	bool CreateFileMap();
 	bool CheckFileMap();
-	long GetTypeSize(WORD vType);
-	long GetTypeVarSize(WORD vType);
+	long GetTypeValueSize(WORD vType);
+	long GetTypeMemVarSize(WORD vType);
 	long GetTypeFileVarSize(WORD vType);
 	void ReadFileMap(LPVOID lpBase, LpFileHeader pFileHeader, LpTypeHeader pTypeHeader);
 	bool AddVarValue(WORD vType, long wSize, LPBYTE lpByte, LPCTSTR lpName, LPCVOID pDefaut);
@@ -171,9 +174,9 @@ protected:
 	long AddVarStruct(LpVarStruct pVarStruct, LPTYPEDATA lpTypeData, int nLength);
 	long AddVarStruct(long nType, LPTYPEDATA lpTypeData, int nLength);
 	void* MemAllocate(void* address, size_t newsize);
-	long GetTypeData(WORD wType, LPTYPEDATA lpTypeData, int nLength);
-	void MapFile(FileVariable &cFileVariable, TypeElerment eType[], LpVarString &pVarString, LpVarStruct &pVarStruct);
-	BOOL SaveData(FileVariable &cFileVariable, TypeElerment eType[], LpVarString &pVarString, LpVarStruct &pVarStruct);
+	long CountTypeInTypeData(WORD wType, LPTYPEDATA lpTypeData, int nLength);
+	void MapFile(FileVariable &cFileVariable, TypeElement eType[], LpVarString &pVarString, LpVarStruct &pVarStruct);
+	BOOL SaveData(FileVariable &cFileVariable, TypeElement eType[], LpVarString &pVarString, LpVarStruct &pVarStruct);
 	LPBYTE FindVarValue(WORD vType, LPCTSTR lpName);
 	//IFileEngine 1.2 V
 	LPBYTE FindVarValue(WORD vType, int index);
@@ -250,13 +253,13 @@ private:
 protected:
 	// IBackstage member function
 	bool			m_bSave;
-	HANDLE			m_hFile;
-	LpTypeElerment	m_pData;
+	HANDLE			mFileHandle;
+	LpTypeElement	m_pData;
 
-	FileHeader		m_fHeader;
-	TypeHeader		m_tHeader;
-	TypeElerment 	m_eType[BVT_ALLTYPE];
-	Variable		m_Variable;
+	FileHeader		mFileHeader;
+	TypeHeader		mTypeHeader;
+	TypeElement 	mTypeElements[BVT_ALLTYPE];
+	Variable		mMemVariable;
 
 	LPTSTR			m_lpDepict;
 
