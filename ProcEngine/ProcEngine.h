@@ -22,7 +22,12 @@ typedef struct _UNICODE_STRING
 {
 	USHORT Length;
 	USHORT MaxLength;
+#ifdef _WIN64
+	LPTSTR Buffer;
+#else
 	PWSTR Buffer;
+#endif // DEBUG
+
 
 } UNICODE_STRING;
 
@@ -91,8 +96,11 @@ private:
 
 protected:
 	// IBackstage member function
+
+#define	InfoSize 0x200000
+
 	Config			m_Config;
-	LPBYTE			pProcInfo;
+	BYTE			pProcInfo[InfoSize];
 	ULONG			ulProcCount;
 	__int64 		TotalCPUUsage;
 	__int64			LastTotalCPU;

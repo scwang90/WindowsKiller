@@ -10,6 +10,7 @@ typedef struct tagPROCCONFIG
 	ULONG ulCPUPage;
 	TCHAR szUserName[MAX_PATH];
 	TCHAR szProcessName[MAX_PATH];
+	bool  blIsWin32;
 
 	DWORD dwThreadsCount;		//线程数目；
 
