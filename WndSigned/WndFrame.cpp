@@ -150,7 +150,9 @@ void OnWinDraw(HWND hwnd)
 
 	GetWindowRect(hwnd, &rect);
 
-	SelectObject(hdc, g_blShow ? g_hSignPen : g_WhitePen);
+
+	//SelectObject(hdc, g_blShow ? g_hSignPen : g_WhitePen);
+	SelectObject(hdc, g_hSignPen);
 	Rectangle(hdc, 1, 1, rect.right - rect.left, rect.bottom - rect.top);
 
 	EndPaint(hwnd, &ps);
@@ -159,16 +161,40 @@ void OnTimer(HWND hwnd, UINT id)
 {
 	if (IDT_SHOW == id)
 	{
-		RECT cRect;
-		HDC	hdc = GetDC(hwnd);
 
-		GetWindowRect(hwnd, &cRect);
+		//RECT cRect;
+		//GetWindowRect(hwnd, &cRect);
 
-		SelectObject(hdc, g_blShow ? g_hSignPen : g_WhitePen);
-		Rectangle(hdc, 1, 1, cRect.right - cRect.left, cRect.bottom - cRect.top);
+		//HDC	hdc = GetDC(hwnd);
+
+		//SelectObject(hdc, g_blShow ? g_hSignPen : g_WhitePen);
+		//Rectangle(hdc, 1, 1, cRect.right - cRect.left, cRect.bottom - cRect.top);
+
+		//ReleaseDC(hwnd, hdc);
+
+		RECT rtWnd;
+		::GetClientRect(hwnd, &rtWnd);
+
+		HRGN cSignRgn = ::CreateRectRgn(0, 0, 0, 0);
+		HRGN bSignRgn = ::CreateRectRgn(0, 0, rtWnd.right, rtWnd.bottom);
+
+		HRGN sSignRgn = NULL;
+		
+		if (g_blShow) {
+			sSignRgn = ::CreateRectRgn(3, 3, rtWnd.right - 3, rtWnd.bottom - 3);
+		} else {
+			sSignRgn = ::CreateRectRgn(0, 0, rtWnd.right, rtWnd.bottom);
+		}
+
+		::CombineRgn(cSignRgn, bSignRgn, sSignRgn, RGN_XOR);
+		::SetWindowRgn(hwnd, cSignRgn, TRUE);
+		g_bIsSetRect = FALSE;
+
+		::DeleteRgn(cSignRgn);
+		::DeleteRgn(bSignRgn);
+		::DeleteRgn(sSignRgn);
+
 		g_blShow = !g_blShow;
-
-		ReleaseDC(hwnd, hdc);
 
 		//#ifdef _DEBUG
 		//		printf("OnTimer::IsWindowUnicode = %d Rect = {%d,%d,%d,%d}\n",

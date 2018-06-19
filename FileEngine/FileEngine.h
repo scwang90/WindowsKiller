@@ -3,8 +3,10 @@
 
 #include "IFileEngine.h"
 
-#define		IMAGE_SIGNATURE_FILE	0x4653		//SF
-#define		IMAGE_SIGNATURE_TYPE	0x4854		//TH
+#define	IMAGE_SIGNATURE_FILE	0x4653		//SF
+#define	IMAGE_SIGNATURE_TYPE	0x4854		//TH
+#define	PLATFORM_X64		0b0001
+#define	PLATFORM_UNICODE	0b0010
 
 class FileEngine :public IFileEngine
 {
@@ -17,21 +19,34 @@ protected:
 	typedef struct FileHeader {
 		FileHeader()
 			:magic(WORD(IMAGE_SIGNATURE_FILE))
+			, size(sizeof(FileHeader))
 			, version(m_dwVersion)
+			, platform(0)
 			, ldescribe(WORD(sizeof(TCHAR)*lstrlen(m_lpDescribe)))
-			, ptrTypeHeader(LONG(sizeof(FileHeader) + sizeof(TCHAR)*(lstrlen(m_lpDescribe)+1))) {}
+			, ptrTypeHeader(LONG(sizeof(FileHeader) + sizeof(TCHAR)*(lstrlen(m_lpDescribe)+1))) {
+#ifdef _WIN64
+			platform = platform | PLATFORM_X64;
+#endif // _x64
+#ifdef _UNICODE
+			platform = platform | PLATFORM_UNICODE;
+#endif // _UNICODE
+		}
 		WORD	magic;                    // Magic number
-		WORD	version;					// version Code
-		WORD	ldescribe;				// length of describe
+		WORD	size;                     // size number FileHeader 块大小	V1.3
+		WORD	version;				  // version Code
+		WORD	platform;				  // platform 平台兼容性 V1.3
+		WORD	ldescribe;				  // length of describe
 		LONG	ptrTypeHeader;            // File address of new type header
 	}*LpFileHeader;
 	typedef	struct TypeHeader {
 		TypeHeader()
 			:magic(WORD(IMAGE_SIGNATURE_TYPE))
+			, size(sizeof(TypeHeader))
 			, ntype(WORD(BVT_ALLTYPE))
 			, ptrTypeElement(LONG(sizeof(TypeHeader) + sizeof(FileHeader) + sizeof(TCHAR)*(lstrlen(m_lpDescribe)+1))) {}
 		WORD	magic;                    // Magic number
-		WORD	ntype;					// type number
+		WORD	size;                     // size number TypeHeader 块大小 V1.3
+		WORD	ntype;					  // type number
 		LONG	ptrTypeElement;           // File address of new type Element
 	}*LpTypeHeader;
 	typedef	struct TypeElement {

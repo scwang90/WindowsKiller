@@ -63,11 +63,11 @@ typedef struct _PROCESS_INFO
 } PROCESSINFO, *PPROCESSINFO;
 
 
-class CProcessConfig :public IProcEngine
+class ProcEngine :public IProcEngine
 {
 public:
-	CProcessConfig(void);
-	~CProcessConfig(void);
+	ProcEngine(void);
+	~ProcEngine(void);
 
 protected:
 	PPROCESSINFO FindProcFormPid(DWORD dwPid = 0xFFFFFFFF);
