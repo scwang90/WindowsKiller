@@ -22,7 +22,7 @@ protected:
 			, size(sizeof(FileHeader))
 			, version(msDwVersion)
 			, platform(0)
-			, ldescribe(WORD(sizeof(TCHAR)*lstrlen(msLpStrDescribe)))
+			, sizeOfDescribe(WORD(sizeof(TCHAR)*(lstrlen(msLpStrDescribe)+1)))
 			, ptrTypeHeader(LONG(sizeof(FileHeader) + sizeof(TCHAR)*(lstrlen(msLpStrDescribe)+1))) {
 #ifdef _WIN64
 			platform = platform | PLATFORM_X64;
@@ -35,7 +35,7 @@ protected:
 		WORD	size;                     // size number FileHeader 块大小	V1.3
 		WORD	version;				  // version Code
 		WORD	platform;				  // platform 平台兼容性 V1.3
-		WORD	ldescribe;				  // length of describe
+		WORD	sizeOfDescribe;			  // size of describe
 		LONG	ptrTypeHeader;            // File address of new type header
 	}*LpFileHeader;
 	typedef	struct TypeHeader {
@@ -216,30 +216,30 @@ public:
 	virtual bool OpenFile(LPCTSTR lpFile, DWORD dwDesiredAccess = DA_READ | DA_WRITE);
 	
 	//CSupperFile	1.0 V
-	virtual bool GetVarString(LPCTSTR lpName, LPTSTR lpStr, int iSize);
-	virtual bool SetVarValue(WORD vType, LPCTSTR lpName, int dwDefaut, BYTE bValueType);
+	virtual bool GetVarString(LPCTSTR lpName, LPTSTR lpStr, int nMax);
+	virtual bool SetVarValue(WORD vType, LPCTSTR lpName, UINT_PTR dwDefaut, BYTE bValueType);
 	virtual bool SetVarValue(WORD vType, LPCTSTR lpName, LPCVOID pWrite, size_t size = 0);
 	virtual bool GetVarValue(WORD vType, LPCTSTR lpName, PVOID pWrite);
 	virtual long AddVarValue(LPTYPEDATA lpTypeData, int nLength);
 
 	virtual bool AddVarValue(WORD vType, LPCTSTR lpName, LPCVOID pDefaut, size_t size = 0);
-	virtual bool AddVarValue(WORD vType, LPCTSTR lpName, int dwDefaut, BYTE bValueType);
+	virtual bool AddVarValue(WORD vType, LPCTSTR lpName, UINT_PTR dwDefaut, BYTE bValueType);
 	virtual bool AddVarStruct(LPCTSTR lpName, LPCVOID pDefaut, size_t sSize);
 	virtual void OutPutDataInfo();
 	//CSupperFile	1.1 V
 	virtual WORD GetVersion(BYTE bType = VT_FILE);
 	virtual bool SetDepict(LPCTSTR lpDepict);
-	virtual bool GetDepict(LPTSTR lpBuffer, int iSize);
+	virtual bool GetDepict(LPTSTR lpBuffer, int nMax);
 
 	//IFileEngine	1.2 V
-	virtual bool GetLastError(LPTSTR lpStr, int iSize);
+	virtual bool GetLastError(LPTSTR lpStr, int nMax);
 
 	virtual bool GetVarStruct(LPCTSTR lpName, LPVOID pWrite);
 	virtual bool SetVarStruct(LPCTSTR lpName, LPCVOID pDefaut, size_t sSize = 0);
 	virtual bool AddVarString(LPCTSTR lpName, LPCTSTR lpStr, size_t sSize = 0);
 	virtual bool SetVarString(LPCTSTR lpName, LPCTSTR lpStr, size_t sSize = 0);
 
-	virtual bool GetVarName(WORD vType, int index, LPTSTR lpStr, int iSize);
+	virtual bool GetVarName(WORD vType, int index, LPTSTR lpStr, int nMax);
 	virtual bool SetVarName(WORD vType, int index, LPTSTR lpSetName);
 	virtual bool SetVarName(WORD vType, LPCTSTR lpName, LPTSTR lpSetName);
 	virtual bool SetVarIndex(WORD vType, LPCTSTR lpName, int indexto, bool bswap = true);
@@ -253,14 +253,14 @@ public:
 
 	virtual bool AddVarString(int index, LPCTSTR lpName, LPCTSTR lpStr);
 	virtual bool SetVarString(int index, LPCTSTR lpStr);
-	virtual bool GetVarString(int index, LPTSTR lpStr, size_t iSize);
+	virtual bool GetVarString(int index, LPTSTR lpStr, int nMax);
 	virtual bool AddVarStruct(int index, LPCTSTR lpName, LPCVOID pDefaut, size_t sSize);
 	virtual bool SetVarStruct(int index, LPCVOID pDefaut, size_t sSize = 0);
 	virtual bool GetVarStruct(int index, LPVOID pWrite);
 	virtual bool AddVarValue(WORD vType, int index, LPCTSTR lpName, LPCVOID pDefaut);
-	virtual bool AddVarValue(WORD vType, int index, LPCTSTR lpName, int dwDefaut, BYTE bValueType);
+	virtual bool AddVarValue(WORD vType, int index, LPCTSTR lpName, UINT_PTR dwDefaut, BYTE bValueType);
 	virtual bool SetVarValue(WORD vType, int index, LPCVOID pDefaut);
-	virtual bool SetVarValue(WORD vType, int index, int dwDefaut, BYTE bValueType);
+	virtual bool SetVarValue(WORD vType, int index, UINT_PTR dwDefaut, BYTE bValueType);
 	virtual bool GetVarValue(WORD vType, int index, LPVOID pWrite);
 	virtual bool DelVarValue(WORD vType, int index);
 	virtual bool DelVarValue(WORD vType, LPCTSTR lpName);

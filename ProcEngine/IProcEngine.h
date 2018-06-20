@@ -19,26 +19,27 @@ typedef struct tagPROCCONFIG
 	DWORD dwParentProcessId;	//父进程的标识符；
 	DWORD dwHandleCount;		//句柄数目；
 
-	DWORD dwVirtualBytesPeak;	//虚拟存储峰值大小；
-	DWORD dwVirtualBytes;		//虚拟存储大小；	
+	DWORD_PTR dwVirtualBytesPeak;	//虚拟存储峰值大小；
+	DWORD_PTR dwVirtualBytes;		//虚拟存储大小；	
 	ULONG dwPageFaults;			//页故障数目；
-	DWORD dwWorkingSetPeak;		//工作集峰值大小；
-	DWORD dwWorkingSet;			//工作集大小；
+	DWORD_PTR dwWorkingSetPeak;		//工作集峰值大小；
+	DWORD_PTR dwWorkingSet;			//工作集大小；
 
-	DWORD dwQuotaPeakPagedPoolUsage;	//分页池使用配额峰值；
-	DWORD dwQuotaPagedPoolUsage;		//分页池使用配额；
+	DWORD_PTR dwQuotaPeakPagedPoolUsage;	//分页池使用配额峰值；
+	DWORD_PTR dwQuotaPagedPoolUsage;		//分页池使用配额；
 
-	DWORD dwQuotaPeakNonPagedPoolUsage;	//非分页池使用配额峰值；
-	DWORD dwQuotaNonPagedPoolUsage;		//非分页池使用配额；
+	DWORD_PTR dwQuotaPeakNonPagedPoolUsage;	//非分页池使用配额峰值；
+	DWORD_PTR dwQuotaNonPagedPoolUsage;		//非分页池使用配额；
 
-	DWORD dwPageFileUsage;			//页文件使用情况；
-	DWORD dwPageFileUsagePeak;		//页文件使用峰值；
+	DWORD_PTR dwPageFileUsage;			//页文件使用情况；
+	DWORD_PTR dwPageFileUsagePeak;		//页文件使用峰值；
 
 }PROCCONFIG, *PPROCCONFIG, *LPPROCCONFIG;
 
 interface IProcEngine : public IUnknown
 {
-	typedef	PROCCONFIG	CONFIG,*PCONFIG, const near *PCCONFIG, const far *LPCCONFIG;
+	typedef	PROCCONFIG	CONFIG, *PCONFIG, *LPCONFIG;
+	typedef const PCONFIG PCCONFIG, LPCCONFIG;
 
 	virtual long __stdcall UpdateProcessInfo(void) = 0;
 	virtual bool __stdcall InjectDllToProcess(DWORD dwProcessId, LPCTSTR lpDllPath) = 0;

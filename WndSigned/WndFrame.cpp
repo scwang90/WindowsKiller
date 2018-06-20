@@ -261,8 +261,8 @@ void OnDestroy(HWND hwnd)
 
 HBRUSH OnCtlColor(HWND hwnd, HDC hdc, HWND hwndChild, int type)
 {
-#ifdef _DEBUG
-	printf("SignWnd::OnCtlColor(%#x,%#x,%#x,%d)\n", (UINT)hwnd, (UINT)hdc, (UINT)hwndChild, type);
-#endif
+//#ifdef _DEBUG
+//	printf("SignWnd::OnCtlColor(%#x,%#x,%#x,%d)\n", (UINT)hwnd, (UINT)hdc, (UINT)hwndChild, type);
+//#endif
 	return (HBRUSH)GetStockObject(WHITE_BRUSH);
 }

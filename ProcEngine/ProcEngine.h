@@ -48,21 +48,21 @@ typedef struct _PROCESS_INFO
 	DWORD dwParentProcessId;	//父进程的标识符；
 	DWORD dwHandleCount;		//句柄数目；
 	DWORD dwUnused3[2];
-	DWORD dwVirtualBytesPeak;	//虚拟存储峰值大小；
-	DWORD dwVirtualBytes;		//虚拟存储大小；	
-	ULONG dwPageFaults;			//页故障数目；
-	DWORD dwWorkingSetPeak;		//工作集峰值大小；
-	DWORD dwWorkingSet;			//工作集大小；
+	DWORD_PTR dwVirtualBytesPeak;	//虚拟存储峰值大小；
+	DWORD_PTR dwVirtualBytes;		//虚拟存储大小；	
+	DWORD dwPageFaults;			//页故障数目；
+	DWORD_PTR dwWorkingSetPeak;		//工作集峰值大小；
+	DWORD_PTR dwWorkingSet;			//工作集大小；
 
-	DWORD dwQuotaPeakPagedPoolUsage;	//分页池使用配额峰值；
-	DWORD dwQuotaPagedPoolUsage;		//分页池使用配额；
+	DWORD_PTR dwQuotaPeakPagedPoolUsage;	//分页池使用配额峰值；
+	DWORD_PTR dwQuotaPagedPoolUsage;		//分页池使用配额；
 
-	DWORD dwQuotaPeakNonPagedPoolUsage;	//非分页池使用配额峰值；
-	DWORD dwQuotaNonPagedPoolUsage;		//非分页池使用配额；
+	DWORD_PTR dwQuotaPeakNonPagedPoolUsage;	//非分页池使用配额峰值；
+	DWORD_PTR dwQuotaNonPagedPoolUsage;		//非分页池使用配额；
 
-	DWORD dwPageFileUsage;			//页文件使用情况；
-	DWORD dwPageFileUsagePeak;		//页文件使用峰值；
-	DWORD dCommitCharge;
+	DWORD_PTR dwPageFileUsage;			//页文件使用情况；
+	DWORD_PTR dwPageFileUsagePeak;		//页文件使用峰值；
+	DWORD_PTR dCommitCharge;
 	THREADINFO ThreadSysInfo[1];	//进程相关线程的结构数组
 
 } PROCESSINFO, *PPROCESSINFO;

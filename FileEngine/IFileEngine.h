@@ -14,8 +14,8 @@ typedef struct tagTYPEDATA {
 	TCHAR	tName[VAR_NAME_SIZE];	  // Variable Name
 	LPCVOID	dwValue;				  // Variable Value
 	union {
-		BYTE	bValueType;           // TD_ADDRESS or TD_VALUE
-		WORD	wStrcutSize;		  // Size of Strcut
+		int		wStrcutSize;		  // Size of Strcut
+		int		bValueType;           // TD_ADDRESS or TD_VALUE
 	};
 }TYPEDATA, *PTYPEDATA, *LPTYPEDATA;
 
@@ -59,29 +59,29 @@ interface IFileEngine : public IUnknown
 	virtual bool IsEmptyRecorde() = 0;
 	virtual bool OpenFile(LPCTSTR lpFile, DWORD dwDesiredAccess = DA_READ | DA_WRITE) = 0;
 
-	virtual bool GetVarString(LPCTSTR lpName, LPTSTR lpStr, int iSize) = 0;
-	virtual bool SetVarValue(WORD vType, LPCTSTR lpName, int dwDefaut, BYTE bValueType = TD_VALUE) = 0;
+	virtual bool GetVarString(LPCTSTR lpName, LPTSTR lpStr, int nMax) = 0;
+	virtual bool SetVarValue(WORD vType, LPCTSTR lpName, UINT_PTR dwDefaut, BYTE bValueType = TD_VALUE) = 0;
 	virtual bool SetVarValue(WORD vType, LPCTSTR lpName, LPCVOID pDefaut, size_t size = 0) = 0;
 	virtual bool GetVarValue(WORD vType, LPCTSTR lpName, PVOID pWrite) = 0;
 	virtual long AddVarValue(LPTYPEDATA lpTypeData, int nLength) = 0;
 
 	virtual bool AddVarValue(WORD vType, LPCTSTR lpName, LPCVOID pDefaut, size_t size = 0) = 0;
-	virtual bool AddVarValue(WORD vType, LPCTSTR lpName, int dwDefaut, BYTE bValueType = TD_VALUE) = 0;
+	virtual bool AddVarValue(WORD vType, LPCTSTR lpName, UINT_PTR dwDefaut, BYTE bValueType = TD_VALUE) = 0;
 	virtual bool AddVarStruct(LPCTSTR lpName, LPCVOID pDefaut, size_t sSize) = 0;
 	virtual void OutPutDataInfo() = 0;
 	//IFileEngine	1.1 V
 	virtual WORD GetVersion(BYTE bType = VT_FILE) = 0;
 	virtual bool SetDepict(LPCTSTR lpDepict) = 0;
-	virtual bool GetDepict(LPTSTR lpBuffer, int iSize) = 0;
+	virtual bool GetDepict(LPTSTR lpBuffer, int nMax) = 0;
 	//IFileEngine	1.2 V
-	virtual bool GetLastError(LPTSTR lpStr, int iSize) = 0;
+	virtual bool GetLastError(LPTSTR lpStr, int nMax) = 0;
 
 	virtual bool GetVarStruct(LPCTSTR lpName, LPVOID pDefaut) = 0;
 	virtual bool SetVarStruct(LPCTSTR lpName, LPCVOID pDefaut, size_t sSize = 0) = 0;
 	virtual bool AddVarString(LPCTSTR lpName, LPCTSTR lpStr, size_t sSize = 0) = 0;
 	virtual bool SetVarString(LPCTSTR lpName, LPCTSTR lpStr, size_t sSize = 0) = 0;
 
-	virtual bool GetVarName(WORD vType, int index, LPTSTR lpStr, int iSize) = 0;
+	virtual bool GetVarName(WORD vType, int index, LPTSTR lpStr, int nMax) = 0;
 	virtual bool SetVarName(WORD vType, int index, LPTSTR lpSetName) = 0;
 	virtual bool SetVarName(WORD vType, LPCTSTR lpName, LPTSTR lpSetName) = 0;
 	virtual long GetVarIndex(WORD vType, LPCTSTR lpName) = 0;
@@ -95,14 +95,14 @@ interface IFileEngine : public IUnknown
 
 	virtual bool AddVarString(int index, LPCTSTR lpName, LPCTSTR lpStr) = 0;
 	virtual bool SetVarString(int index, LPCTSTR lpStr) = 0;
-	virtual bool GetVarString(int index, LPTSTR lpStr, size_t iSize) = 0;
+	virtual bool GetVarString(int index, LPTSTR lpStr, int nMax) = 0;
 	virtual bool AddVarStruct(int index, LPCTSTR lpName, LPCVOID pDefaut, size_t sSize) = 0;
 	virtual bool SetVarStruct(int index, LPCVOID pDefaut, size_t sSize = 0) = 0;
 	virtual bool GetVarStruct(int index, LPVOID pWrite) = 0;
 	virtual bool AddVarValue(WORD vType, int index, LPCTSTR lpName, LPCVOID pDefaut) = 0;
-	virtual bool AddVarValue(WORD vType, int index, LPCTSTR lpName, int dwDefaut, BYTE bValueType = TD_VALUE) = 0;
+	virtual bool AddVarValue(WORD vType, int index, LPCTSTR lpName, UINT_PTR dwDefaut, BYTE bValueType = TD_VALUE) = 0;
 	virtual bool SetVarValue(WORD vType, int index, LPCVOID pDefaut) = 0;
-	virtual bool SetVarValue(WORD vType, int index, int dwDefaut, BYTE bValueType = TD_VALUE) = 0;
+	virtual bool SetVarValue(WORD vType, int index, UINT_PTR dwDefaut, BYTE bValueType = TD_VALUE) = 0;
 	virtual bool GetVarValue(WORD vType, int index, LPVOID pWrite) = 0;
 	virtual bool DelVarValue(WORD vType, int index) = 0;
 	virtual bool DelVarValue(WORD vType, LPCTSTR lpName) = 0;
