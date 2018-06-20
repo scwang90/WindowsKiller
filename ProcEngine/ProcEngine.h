@@ -67,6 +67,63 @@ typedef struct _PROCESS_INFO
 
 } PROCESSINFO, *PPROCESSINFO;
 
+class Thread {
+protected:
+	HANDLE m_hThread;
+
+public:
+	Thread(HANDLE hThread) :m_hThread(hThread) {}
+	~Thread() {
+		if (m_hThread) {
+			CloseHandle(m_hThread);
+		}
+	}
+public:
+	__declspec(property(get = GetHandle)) HANDLE mHdlThread;
+
+public:
+	HANDLE GetHandle() {
+		return m_hThread;
+	}
+	operator HANDLE() {
+		return m_hThread;
+	}
+};
+class Process {
+
+protected:
+	HANDLE m_hProcess;
+
+public:
+	Process(HANDLE hProcess) :m_hProcess(hProcess) {}
+	~Process() {
+		if (m_hProcess) {
+			CloseHandle(m_hProcess);
+		}
+	}
+public:
+	__declspec(property(get = GetHandle)) HANDLE mHdlProcess;
+
+public:
+	HANDLE GetHandle() {
+		return m_hProcess;
+	}
+	operator HANDLE() {
+		return m_hProcess;
+	}
+	LPVOID VirtualAllocEx(LPVOID lpAddress, SIZE_T dwSize, DWORD flAllocationType, DWORD flProtect) {
+		return ::VirtualAllocEx(m_hProcess, lpAddress, dwSize, flAllocationType, flProtect);
+	}
+	BOOL WriteProcessMemory(LPVOID lpBaseAddress, LPCVOID lpBuffer, SIZE_T nSize, SIZE_T* lpNumberOfBytesWritten) {
+		return ::WriteProcessMemory(m_hProcess, lpBaseAddress, lpBuffer, nSize, lpNumberOfBytesWritten);
+	}
+	BOOL VirtualFreeEx(LPVOID lpAddress, SIZE_T dwSize, DWORD dwFreeType) {
+		return ::VirtualFreeEx(m_hProcess, lpAddress, dwSize, dwFreeType);
+	}
+	HANDLE CreateRemoteThread(LPSECURITY_ATTRIBUTES lpThreadAttributes, SIZE_T dwStackSize, LPTHREAD_START_ROUTINE lpStartAddress, LPVOID lpParameter, DWORD dwCreationFlags, LPDWORD lpThreadId) {
+		return ::CreateRemoteThread(m_hProcess, lpThreadAttributes, dwStackSize,lpStartAddress, lpParameter, dwCreationFlags, lpThreadId);
+	}
+};
 
 class ProcEngine :public IProcEngine
 {
@@ -78,7 +135,8 @@ protected:
 	PPROCESSINFO FindProcFormPid(DWORD dwPid = 0xFFFFFFFF);
 
 protected:
-	void	CopyProcConfigData(Config *pConfig, PPROCESSINFO pProc);
+	void CopyProcConfigData(CONFIG *pConfig, PPROCESSINFO pProc);
+	bool FormatLastError(LPCTSTR lpError = NULL);
 
 public:
 	// IUnknown member function
@@ -87,8 +145,10 @@ public:
 	virtual ULONG	__stdcall Release();
 
 	// IBackstage member function	
-	virtual long	__stdcall UpdateProcessInfo(void);
-	virtual Config*	__stdcall GetProcessConfig(DWORD dwPid = 0xFFFFFFFF);
+	virtual long __stdcall UpdateProcessInfo(void);
+	virtual bool __stdcall InjectDllToProcess(DWORD dwProcessId, LPCTSTR lpDllPath);
+	virtual LPCCONFIG __stdcall GetProcessConfig(DWORD dwProcessId = 0xFFFFFFFF);
+	virtual LPCTSTR GetLastError();
 
 private:
 	// IUnknown member data	
@@ -99,11 +159,13 @@ protected:
 
 #define	InfoSize 0x200000
 
-	Config			m_Config;
+	CONFIG			m_Config;
 	BYTE			pProcInfo[InfoSize];
 	ULONG			ulProcCount;
 	__int64 		TotalCPUUsage;
 	__int64			LastTotalCPU;
 	PPROCESSINFO	pProcessInfo;
+
+	TCHAR			mSzLastError[MAX_PATH];
 };
 

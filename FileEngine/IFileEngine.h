@@ -61,11 +61,11 @@ interface IFileEngine : public IUnknown
 
 	virtual bool GetVarString(LPCTSTR lpName, LPTSTR lpStr, int iSize) = 0;
 	virtual bool SetVarValue(WORD vType, LPCTSTR lpName, int dwDefaut, BYTE bValueType = TD_VALUE) = 0;
-	virtual bool SetVarValue(WORD vType, LPCTSTR lpName, LPCVOID pDefaut) = 0;
+	virtual bool SetVarValue(WORD vType, LPCTSTR lpName, LPCVOID pDefaut, size_t size = 0) = 0;
 	virtual bool GetVarValue(WORD vType, LPCTSTR lpName, PVOID pWrite) = 0;
 	virtual long AddVarValue(LPTYPEDATA lpTypeData, int nLength) = 0;
 
-	virtual bool AddVarValue(WORD vType, LPCTSTR lpName, LPCVOID pDefaut) = 0;
+	virtual bool AddVarValue(WORD vType, LPCTSTR lpName, LPCVOID pDefaut, size_t size = 0) = 0;
 	virtual bool AddVarValue(WORD vType, LPCTSTR lpName, int dwDefaut, BYTE bValueType = TD_VALUE) = 0;
 	virtual bool AddVarStruct(LPCTSTR lpName, LPCVOID pDefaut, size_t sSize) = 0;
 	virtual void OutPutDataInfo() = 0;
@@ -78,8 +78,8 @@ interface IFileEngine : public IUnknown
 
 	virtual bool GetVarStruct(LPCTSTR lpName, LPVOID pDefaut) = 0;
 	virtual bool SetVarStruct(LPCTSTR lpName, LPCVOID pDefaut, size_t sSize = 0) = 0;
-	virtual bool AddVarString(LPCTSTR lpName, LPCTSTR lpStr) = 0;
-	virtual bool SetVarString(LPCTSTR lpName, LPCTSTR lpStr) = 0;
+	virtual bool AddVarString(LPCTSTR lpName, LPCTSTR lpStr, size_t sSize = 0) = 0;
+	virtual bool SetVarString(LPCTSTR lpName, LPCTSTR lpStr, size_t sSize = 0) = 0;
 
 	virtual bool GetVarName(WORD vType, int index, LPTSTR lpStr, int iSize) = 0;
 	virtual bool SetVarName(WORD vType, int index, LPTSTR lpSetName) = 0;
@@ -88,14 +88,14 @@ interface IFileEngine : public IUnknown
 	virtual bool SetVarIndex(WORD vType, LPCTSTR lpName, int indexto, bool bswap = true) = 0;
 	virtual bool SetVarIndex(WORD vType, int index, int indexto, bool bswap = true) = 0;
 
-	virtual size_t GetVarStringSize(int index) = 0;
-	virtual size_t GetVarStringSize(LPCTSTR lpName) = 0;
-	virtual size_t GetVarStructSize(int index) = 0;
-	virtual size_t GetVarStructSize(LPCTSTR lpName) = 0;
+	virtual long GetVarStringSize(int index) = 0;
+	virtual long GetVarStringSize(LPCTSTR lpName) = 0;
+	virtual long GetVarStructSize(int index) = 0;
+	virtual long GetVarStructSize(LPCTSTR lpName) = 0;
 
 	virtual bool AddVarString(int index, LPCTSTR lpName, LPCTSTR lpStr) = 0;
 	virtual bool SetVarString(int index, LPCTSTR lpStr) = 0;
-	virtual bool GetVarString(int index, LPTSTR lpStr, int iSize) = 0;
+	virtual bool GetVarString(int index, LPTSTR lpStr, size_t iSize) = 0;
 	virtual bool AddVarStruct(int index, LPCTSTR lpName, LPCVOID pDefaut, size_t sSize) = 0;
 	virtual bool SetVarStruct(int index, LPCVOID pDefaut, size_t sSize = 0) = 0;
 	virtual bool GetVarStruct(int index, LPVOID pWrite) = 0;
@@ -110,7 +110,24 @@ interface IFileEngine : public IUnknown
 	virtual bool DelAllValue(WORD vType = BVT_ALLTYPE) = 0;
 	virtual long GetVarNumber(WORD vType = BVT_ALLTYPE) = 0;
 
-	//virtual WORD GetFileVersion() = 0;
+	//IFileEngine	1.3 V
+	virtual bool IsHasVarName(WORD vType, LPCTSTR lpName = nullptr) = 0;
+	virtual bool PutVarStruct(LPCTSTR lpName, LPCVOID pDefaut, size_t size) = 0;
+	virtual bool PutVarString(LPCTSTR lpName, LPCTSTR pDefaut, size_t size = 0) = 0;
+	virtual bool PutVar(LPCTSTR lpName, const bool& value) = 0;
+	virtual bool PutVar(LPCTSTR lpName, const char& value) = 0;
+	virtual bool PutVar(LPCTSTR lpName, const BYTE& value) = 0;
+	virtual bool PutVar(LPCTSTR lpName, const short& value) = 0;
+	virtual bool PutVar(LPCTSTR lpName, const WORD& value) = 0;
+	virtual bool PutVar(LPCTSTR lpName, const int& value) = 0;
+	virtual bool PutVar(LPCTSTR lpName, const DWORD& value) = 0;
+	virtual bool PutVar(LPCTSTR lpName, const long& value) = 0;
+	virtual bool PutVar(LPCTSTR lpName, const INT64& value) = 0;
+	virtual bool PutVar(LPCTSTR lpName, const UINT64& value) = 0;
+	virtual bool PutVar(LPCTSTR lpName, const float& value) = 0;
+	virtual bool PutVar(LPCTSTR lpName, const double& value) = 0;
+	virtual bool PutVar(LPCTSTR lpName, LPCTSTR lpStr) = 0;
+
 };
 
 

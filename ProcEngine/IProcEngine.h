@@ -38,10 +38,12 @@ typedef struct tagPROCCONFIG
 
 interface IProcEngine : public IUnknown
 {
-	typedef	PROCCONFIG	Config;
+	typedef	PROCCONFIG	CONFIG,*PCONFIG, const near *PCCONFIG, const far *LPCCONFIG;
 
-	virtual long	__stdcall UpdateProcessInfo(void) = 0;
-	virtual Config*	__stdcall GetProcessConfig(DWORD dwPid = 0xFFFFFFFF) = 0;
+	virtual long __stdcall UpdateProcessInfo(void) = 0;
+	virtual bool __stdcall InjectDllToProcess(DWORD dwProcessId, LPCTSTR lpDllPath) = 0;
+	virtual LPCCONFIG __stdcall GetProcessConfig(DWORD dwPid = 0xFFFFFFFF) = 0;
+	virtual LPCTSTR GetLastError() = 0;
 };
 
 #ifdef PROCENGINE_EXPORTS

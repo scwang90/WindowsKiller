@@ -39,13 +39,13 @@ namespace UnitTest
 			RECT testStruct2 = { 4,3,2,1 };
 
 			TYPEDATA cTypeData[] = {
-			{ IFileEngine::VT_CHAR	,TEXT("TD_VALUE_VT_CHAR	 ")	,LPCVOID(testChar),TD_VALUE },
-			{ IFileEngine::VT_BYTE	,TEXT("TD_VALUE_VT_BYTE	 ")	,LPCVOID(testByte),TD_VALUE },
-			{ IFileEngine::VT_BOOL	,TEXT("TD_VALUE_VT_BOOL	 ")	,LPCVOID(testBool),TD_VALUE },
-			{ IFileEngine::VT_SHORT ,TEXT("TD_VALUE_VT_SHORT ")	,LPCVOID(testShort),TD_VALUE },
-			{ IFileEngine::VT_WORD	,TEXT("TD_VALUE_VT_WORD	 ")	,LPCVOID(testWord),TD_VALUE },
-			{ IFileEngine::VT_INT	,TEXT("TD_VALUE_VT_INT	 ")	,LPCVOID(testInt),TD_VALUE },
-			{ IFileEngine::VT_LONG	,TEXT("TD_VALUE_VT_LONG	 ")	,LPCVOID(testLong),TD_VALUE },
+			{ IFileEngine::VT_CHAR	,TEXT("TD_VALUE_VT_CHAR	 ")	,LPCVOID(&testChar),TD_ADDRESS },
+			{ IFileEngine::VT_BYTE	,TEXT("TD_VALUE_VT_BYTE	 ")	,LPCVOID(&testByte),TD_ADDRESS },
+			{ IFileEngine::VT_BOOL	,TEXT("TD_VALUE_VT_BOOL	 ")	,LPCVOID(&testBool),TD_ADDRESS },
+			{ IFileEngine::VT_SHORT ,TEXT("TD_VALUE_VT_SHORT ")	,LPCVOID(&testShort),TD_ADDRESS },
+			{ IFileEngine::VT_WORD	,TEXT("TD_VALUE_VT_WORD	 ")	,LPCVOID(&testWord),TD_ADDRESS },
+			{ IFileEngine::VT_INT	,TEXT("TD_VALUE_VT_INT	 ")	,LPCVOID(&testInt),TD_ADDRESS },
+			{ IFileEngine::VT_LONG	,TEXT("TD_VALUE_VT_LONG	 ")	,LPCVOID(&testLong),TD_ADDRESS },
 			{ IFileEngine::VT_FLOAT ,TEXT("TD_VALUE_VT_FLOAT ")	,LPCVOID(&testFloat),TD_ADDRESS },
 			{ IFileEngine::VT_DOUBLE,TEXT("TD_VALUE_VT_DOUBLE")	,LPCVOID(&testDouble),TD_ADDRESS },
 			{ IFileEngine::VT_STRING,TEXT("TD_VALUE_VT_STRING")	,LPCVOID(testString), lstrlen(testString) + 1 },

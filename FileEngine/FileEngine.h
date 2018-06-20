@@ -20,10 +20,10 @@ protected:
 		FileHeader()
 			:magic(WORD(IMAGE_SIGNATURE_FILE))
 			, size(sizeof(FileHeader))
-			, version(m_dwVersion)
+			, version(msDwVersion)
 			, platform(0)
-			, ldescribe(WORD(sizeof(TCHAR)*lstrlen(m_lpDescribe)))
-			, ptrTypeHeader(LONG(sizeof(FileHeader) + sizeof(TCHAR)*(lstrlen(m_lpDescribe)+1))) {
+			, ldescribe(WORD(sizeof(TCHAR)*lstrlen(msLpStrDescribe)))
+			, ptrTypeHeader(LONG(sizeof(FileHeader) + sizeof(TCHAR)*(lstrlen(msLpStrDescribe)+1))) {
 #ifdef _WIN64
 			platform = platform | PLATFORM_X64;
 #endif // _x64
@@ -43,7 +43,7 @@ protected:
 			:magic(WORD(IMAGE_SIGNATURE_TYPE))
 			, size(sizeof(TypeHeader))
 			, ntype(WORD(BVT_ALLTYPE))
-			, ptrTypeElement(LONG(sizeof(TypeHeader) + sizeof(FileHeader) + sizeof(TCHAR)*(lstrlen(m_lpDescribe)+1))) {}
+			, ptrTypeElement(LONG(sizeof(TypeHeader) + sizeof(FileHeader) + sizeof(TCHAR)*(lstrlen(msLpStrDescribe)+1))) {}
 		WORD	magic;                    // Magic number
 		WORD	size;                     // size number TypeHeader ¿é´óÐ¡ V1.3
 		WORD	ntype;					  // type number
@@ -89,14 +89,14 @@ protected:
 	typedef	struct VarString {
 		TCHAR	tName[VAR_NAME_SIZE];		// Variable Name
 		union {
-			PTSTR	tValue;               // Value
+			LPTSTR	tValue;               // Value
 			LONG	tAddres;
 		};
 	}*LpVarString;
 	typedef	struct FileVarString {
 		LONG	tName;					// address of Variable Name
 		union {
-			PTSTR	tValue;               // Value
+			LPTSTR	tValue;               // Value
 			LONG	tAddres;
 		};
 	}*LpFileVarString;
@@ -104,7 +104,7 @@ protected:
 		TCHAR	tName[VAR_NAME_SIZE];		// Strcut Name
 		size_t	tSize;					// Strcut Size
 		union {
-			PVOID	tValue;               // Value
+			LPVOID	tValue;               // Value
 			LONG	tAddres;
 		};
 	}*LpVarStruct;
@@ -112,7 +112,7 @@ protected:
 		LONG	tName;					// address of Variable Name
 		size_t	tSize;					// Strcut Size
 		union {
-			PVOID	tValue;               // Value
+			LPVOID	tValue;               // Value
 			LONG	tAddres;
 		};
 	}*LpFileVarStruct;
@@ -181,7 +181,7 @@ protected:
 	long GetTypeMemVarSize(WORD vType);
 	long GetTypeFileVarSize(WORD vType);
 	void ReadFileMap(LPVOID lpBase, LpFileHeader pFileHeader, LpTypeHeader pTypeHeader);
-	bool AddVarValue(WORD vType, long wSize, LPBYTE lpByte, LPCTSTR lpName, LPCVOID pDefaut);
+	bool AddVarValue(WORD vType, long wSize, LPBYTE lpByte, LPCTSTR lpName, LPCVOID pDefaut, size_t size = 0);
 	long AddVarValue(LPBYTE lpByte, WORD wType, WORD wSize, LPTYPEDATA lpTypeData, int nLength);
 	long AddVarValue(WORD wType, long nType, LPTYPEDATA lpTypeData, int nLength);
 	long AddVarString(LpVarString pVarString, LPTYPEDATA lpTypeData, int nLength);
@@ -193,8 +193,15 @@ protected:
 	void MapFile(FileVariable &cFileVariable, TypeElement eType[], LpVarString &pVarString, LpVarStruct &pVarStruct);
 	BOOL SaveData(FileVariable &cFileVariable, TypeElement eType[], LpVarString &pVarString, LpVarStruct &pVarStruct);
 	LPBYTE FindVarValue(WORD vType, LPCTSTR lpName);
+	
 	//IFileEngine 1.2 V
 	LPBYTE FindVarValue(WORD vType, int index);
+	
+	//IFileEngine 1.3 V
+	BaseValueType MapBaseValueType(size_t size);
+
+	template<typename T>
+	bool PutVarTemplate(LPCTSTR lpName, const T& value);
 
 public:
 	// IUnknown member function
@@ -207,14 +214,15 @@ public:
 	virtual bool SaveFile();
 	virtual bool IsEmptyRecorde();
 	virtual bool OpenFile(LPCTSTR lpFile, DWORD dwDesiredAccess = DA_READ | DA_WRITE);
+	
 	//CSupperFile	1.0 V
 	virtual bool GetVarString(LPCTSTR lpName, LPTSTR lpStr, int iSize);
 	virtual bool SetVarValue(WORD vType, LPCTSTR lpName, int dwDefaut, BYTE bValueType);
-	virtual bool SetVarValue(WORD vType, LPCTSTR lpName, LPCVOID pWrite);
+	virtual bool SetVarValue(WORD vType, LPCTSTR lpName, LPCVOID pWrite, size_t size = 0);
 	virtual bool GetVarValue(WORD vType, LPCTSTR lpName, PVOID pWrite);
 	virtual long AddVarValue(LPTYPEDATA lpTypeData, int nLength);
 
-	virtual bool AddVarValue(WORD vType, LPCTSTR lpName, LPCVOID pDefaut);
+	virtual bool AddVarValue(WORD vType, LPCTSTR lpName, LPCVOID pDefaut, size_t size = 0);
 	virtual bool AddVarValue(WORD vType, LPCTSTR lpName, int dwDefaut, BYTE bValueType);
 	virtual bool AddVarStruct(LPCTSTR lpName, LPCVOID pDefaut, size_t sSize);
 	virtual void OutPutDataInfo();
@@ -228,24 +236,24 @@ public:
 
 	virtual bool GetVarStruct(LPCTSTR lpName, LPVOID pWrite);
 	virtual bool SetVarStruct(LPCTSTR lpName, LPCVOID pDefaut, size_t sSize = 0);
-	virtual bool AddVarString(LPCTSTR lpName, LPCTSTR lpStr);
-	virtual bool SetVarString(LPCTSTR lpName, LPCTSTR lpStr);
+	virtual bool AddVarString(LPCTSTR lpName, LPCTSTR lpStr, size_t sSize = 0);
+	virtual bool SetVarString(LPCTSTR lpName, LPCTSTR lpStr, size_t sSize = 0);
 
 	virtual bool GetVarName(WORD vType, int index, LPTSTR lpStr, int iSize);
 	virtual bool SetVarName(WORD vType, int index, LPTSTR lpSetName);
 	virtual bool SetVarName(WORD vType, LPCTSTR lpName, LPTSTR lpSetName);
-	virtual long GetVarIndex(WORD vType, LPCTSTR lpName);
 	virtual bool SetVarIndex(WORD vType, LPCTSTR lpName, int indexto, bool bswap = true);
 	virtual bool SetVarIndex(WORD vType, int index, int indexto, bool bswap = true);
+	virtual long GetVarIndex(WORD vType, LPCTSTR lpName);
 
-	virtual size_t GetVarStringSize(int index);
-	virtual size_t GetVarStringSize(LPCTSTR lpName);
-	virtual size_t GetVarStructSize(int index);
-	virtual size_t GetVarStructSize(LPCTSTR lpName);
+	virtual long GetVarStringSize(int index);
+	virtual long GetVarStringSize(LPCTSTR lpName);
+	virtual long GetVarStructSize(int index);
+	virtual long GetVarStructSize(LPCTSTR lpName);
 
 	virtual bool AddVarString(int index, LPCTSTR lpName, LPCTSTR lpStr);
 	virtual bool SetVarString(int index, LPCTSTR lpStr);
-	virtual bool GetVarString(int index, LPTSTR lpStr, int iSize);
+	virtual bool GetVarString(int index, LPTSTR lpStr, size_t iSize);
 	virtual bool AddVarStruct(int index, LPCTSTR lpName, LPCVOID pDefaut, size_t sSize);
 	virtual bool SetVarStruct(int index, LPCVOID pDefaut, size_t sSize = 0);
 	virtual bool GetVarStruct(int index, LPVOID pWrite);
@@ -260,7 +268,27 @@ public:
 	virtual bool DelAllValue(WORD vType = BVT_ALLTYPE);
 	virtual long GetVarNumber(WORD vType = BVT_ALLTYPE);
 
-	//virtual WORD GetFileVersion();
+	//IFileEngine	1.3 V
+	virtual bool IsHasVarName(WORD vType, LPCTSTR lpName = nullptr);
+	virtual bool PutVarStruct(LPCTSTR lpName, LPCVOID pDefaut, size_t size);
+	virtual bool PutVarString(LPCTSTR lpName, LPCTSTR pDefaut, size_t size = 0);
+
+	virtual bool PutVar(LPCTSTR lpName, const bool& value);
+	virtual bool PutVar(LPCTSTR lpName, const char& value);
+	virtual bool PutVar(LPCTSTR lpName, const BYTE& value);
+	virtual bool PutVar(LPCTSTR lpName, const short& value);
+	virtual bool PutVar(LPCTSTR lpName, const WORD& value);
+	virtual bool PutVar(LPCTSTR lpName, const int& value);
+	virtual bool PutVar(LPCTSTR lpName, const DWORD& value);
+	virtual bool PutVar(LPCTSTR lpName, const long& value);
+	virtual bool PutVar(LPCTSTR lpName, const INT64& value);
+	virtual bool PutVar(LPCTSTR lpName, const UINT64& value);
+	virtual bool PutVar(LPCTSTR lpName, const float& value);
+	virtual bool PutVar(LPCTSTR lpName, const double& value);
+	virtual bool PutVar(LPCTSTR lpName, LPCTSTR lpStr);
+
+	virtual LPCTSTR GetLastError();
+
 private:
 	// IUnknown member data	
 	int		m_Ref;
@@ -276,11 +304,12 @@ protected:
 	TypeElement 	mTypeElements[BVT_ALLTYPE];
 	Variable		mMemVariable;
 
-	LPTSTR			m_lpDepict;
+	LPTSTR			mLpStrDepict;
 
 	//IFileEngine	1.2 V
-	TCHAR			m_szLastError[256];
+	TCHAR			mSzLastError[MAX_PATH];
+
 public:
-	static	LPCTSTR	m_lpDescribe;
-	static	WORD	m_dwVersion;
+	static	LPCTSTR	msLpStrDescribe;
+	static	WORD	msDwVersion;
 };
