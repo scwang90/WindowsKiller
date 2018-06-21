@@ -1,16 +1,70 @@
 #pragma once
 
 #include <Unknwn.h>
-
+#include "../Common/Common.h"
 // {D44CAC41-F0F3-4C2A-ADB4-0274D862B5DB}
 extern "C" const GUID IID_IProcEngine;
 
+typedef struct __THREAD_INFO
+{
+	LARGE_INTEGER CreateTime;
+	DWORD dwUnknown1;
+	DWORD dwStartAddress;		//线程开始的虚拟地址；
+	DWORD StartEIP;
+	DWORD dwOwnerPID;
+	DWORD dwThreadId;			//线程标识符；
+	DWORD dwCurrentPriority;	//线程优先级；
+	DWORD dwBasePriority;		//基本优先级；
+	DWORD dwContextSwitches;	//环境切换数目；
+	DWORD Unknown;
+	DWORD WaitReason;			//等待原因；
+
+}THREAD_INFO, *PTHREAD_INFO;
+
+typedef const THREAD_INFO *PCTHREAD_INFO, *LPCTHREAD_INFO;
+
+typedef struct __PROCESS_INFO {
+
+	bool  blIsWin32;
+
+	ULONG ulCPUPage;
+	String szUserName;
+	String szProcessName;
+
+	DWORD dwThreadsCount;		//线程数目；
+
+	DWORD dwBasePriority;		//进程优先权；
+	DWORD dwProcessID;			//进程标识符；
+	DWORD dwParentProcessId;	//父进程的标识符；
+	DWORD dwHandleCount;		//句柄数目；
+
+	DWORD dwPageFaults;				//页故障数目；
+	DWORD_PTR dwVirtualBytesPeak;	//虚拟存储峰值大小；
+	DWORD_PTR dwVirtualBytes;		//虚拟存储大小；	
+	DWORD_PTR dwWorkingSetPeak;		//工作集峰值大小；
+	DWORD_PTR dwWorkingSet;			//工作集大小；
+
+	DWORD_PTR dwQuotaPeakPagedPoolUsage;	//分页池使用配额峰值；
+	DWORD_PTR dwQuotaPagedPoolUsage;		//分页池使用配额；
+
+	DWORD_PTR dwQuotaPeakNonPagedPoolUsage;	//非分页池使用配额峰值；
+	DWORD_PTR dwQuotaNonPagedPoolUsage;		//非分页池使用配额；
+
+	DWORD_PTR dwPageFileUsage;			//页文件使用情况；
+	DWORD_PTR dwPageFileUsagePeak;		//页文件使用峰值；
+
+	List<THREAD_INFO> ltThreadSysInfo;
+
+}PROCESS_INFO,*PPROCESS_INFO,*LPPROCESS_INFO,*PPI,*LPPI;
+
+typedef const PROCESS_INFO *PCPROCESS_INFO, *LPCPROCESS_INFO,*PCPI,*LPCPI;
+
 typedef struct tagPROCCONFIG
 {
+	bool  blIsWin32;
 	ULONG ulCPUPage;
 	TCHAR szUserName[MAX_PATH];
 	TCHAR szProcessName[MAX_PATH];
-	bool  blIsWin32;
 
 	DWORD dwThreadsCount;		//线程数目；
 
@@ -43,6 +97,9 @@ interface IProcEngine : public IUnknown
 
 	virtual long __stdcall UpdateProcessInfo(void) = 0;
 	virtual bool __stdcall InjectDllToProcess(DWORD dwProcessId, LPCTSTR lpDllPath) = 0;
+	virtual UINT __stdcall GetCurrentProcessNumber() = 0;
+	virtual PCPI __stdcall GetProcessInfoById(DWORD dwProcessId) = 0;
+	virtual PCPI __stdcall GetProcessInfoByIndex(int index) = 0;
 	virtual LPCCONFIG __stdcall GetProcessConfig(DWORD dwPid = 0xFFFFFFFF) = 0;
 	virtual LPCTSTR GetLastError() = 0;
 };

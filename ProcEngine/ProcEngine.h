@@ -50,7 +50,7 @@ typedef struct _PROCESS_INFO
 	DWORD dwUnused3[2];
 	DWORD_PTR dwVirtualBytesPeak;	//虚拟存储峰值大小；
 	DWORD_PTR dwVirtualBytes;		//虚拟存储大小；	
-	DWORD dwPageFaults;			//页故障数目；
+	DWORD dwPageFaults;				//页故障数目；
 	DWORD_PTR dwWorkingSetPeak;		//工作集峰值大小；
 	DWORD_PTR dwWorkingSet;			//工作集大小；
 
@@ -147,6 +147,9 @@ public:
 	// IBackstage member function	
 	virtual long __stdcall UpdateProcessInfo(void);
 	virtual bool __stdcall InjectDllToProcess(DWORD dwProcessId, LPCTSTR lpDllPath);
+	virtual UINT __stdcall GetCurrentProcessNumber();
+	virtual PCPI __stdcall GetProcessInfoById(DWORD dwProcessId);
+	virtual PCPI __stdcall GetProcessInfoByIndex(int index);
 	virtual LPCCONFIG __stdcall GetProcessConfig(DWORD dwProcessId = 0xFFFFFFFF);
 	virtual LPCTSTR GetLastError();
 
@@ -166,6 +169,7 @@ protected:
 	__int64			LastTotalCPU;
 	PPROCESSINFO	pProcessInfo;
 
-	TCHAR			mSzLastError[MAX_PATH];
+	TCHAR mSzLastError[MAX_PATH];
+	List<PROCESS_INFO> mMltProcessInfo;
 };
 
