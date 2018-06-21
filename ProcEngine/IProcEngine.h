@@ -19,15 +19,63 @@ typedef struct __THREAD_INFO
 	DWORD Unknown;
 	DWORD WaitReason;			//等待原因；
 
-}THREAD_INFO, *PTHREAD_INFO;
+}THREAD_INFO, *PTHREAD_INFO, *LPTHREAD_INFO;
 
 typedef const THREAD_INFO *PCTHREAD_INFO, *LPCTHREAD_INFO;
+
+typedef struct __MEMORY_INFO
+{
+	DWORD_PTR dwVirtualBytesPeak;	//虚拟存储峰值大小；
+	DWORD_PTR dwVirtualBytes;		//虚拟存储大小；	
+	DWORD_PTR dwWorkingSetPeak;		//工作集峰值大小；
+	DWORD_PTR dwWorkingSet;			//工作集大小；
+
+	DWORD_PTR dwQuotaPeakPagedPoolUsage;	//分页池使用配额峰值；
+	DWORD_PTR dwQuotaPagedPoolUsage;		//分页池使用配额；
+
+	DWORD_PTR dwQuotaPeakNonPagedPoolUsage;	//非分页池使用配额峰值；
+	DWORD_PTR dwQuotaNonPagedPoolUsage;		//非分页池使用配额；
+
+	DWORD_PTR dwPageFileUsage;			//页文件使用情况；
+	DWORD_PTR dwPageFileUsagePeak;		//页文件使用峰值；
+
+}MEMORY_INFO, *PMEMORY_INFO, *LPMEMORY_INFO;
+
+typedef const MEMORY_INFO *PCMEMORY_INFO, *LPCMEMORY_INFO;
+
+typedef struct __CPUTIME_INFO
+{
+	union {
+		FILETIME ExitTime;
+		LONGLONG ExitTimeQuad;
+	};
+	union {
+		FILETIME UserTime;
+		LONGLONG UserTimeQuad;
+	};
+	union {
+		FILETIME KernelTime;
+		LONGLONG KernelTimeQuad;
+	};
+	union {
+		FILETIME CreationTime;
+		LONGLONG CreationTimeQuad;
+	};
+	UINT64 LastTime;
+	UINT64 LastUserTime;
+	UINT64 LastKernelTime;
+	UINT64 ThisTime;
+	UINT64 ThisUserTime;
+	UINT64 ThisKernelTime;
+}CPUTIME_INFO, *PCPUTIME_INFO, *LPCPUTIME_INFO;
+
+typedef const CPUTIME_INFO *PCCPUTIME_INFO, *LPCCPUTIME_INFO;
 
 typedef struct __PROCESS_INFO {
 
 	bool  blIsWin32;
 
-	ULONG ulCPUPage;
+	ULONG ulCpuPage;
 	String szUserName;
 	String szProcessName;
 
@@ -38,69 +86,58 @@ typedef struct __PROCESS_INFO {
 	DWORD dwParentProcessId;	//父进程的标识符；
 	DWORD dwHandleCount;		//句柄数目；
 
-	DWORD dwPageFaults;				//页故障数目；
-	DWORD_PTR dwVirtualBytesPeak;	//虚拟存储峰值大小；
-	DWORD_PTR dwVirtualBytes;		//虚拟存储大小；	
-	DWORD_PTR dwWorkingSetPeak;		//工作集峰值大小；
-	DWORD_PTR dwWorkingSet;			//工作集大小；
+	DWORD dwPageFaults;			//页故障数目；
 
-	DWORD_PTR dwQuotaPeakPagedPoolUsage;	//分页池使用配额峰值；
-	DWORD_PTR dwQuotaPagedPoolUsage;		//分页池使用配额；
-
-	DWORD_PTR dwQuotaPeakNonPagedPoolUsage;	//非分页池使用配额峰值；
-	DWORD_PTR dwQuotaNonPagedPoolUsage;		//非分页池使用配额；
-
-	DWORD_PTR dwPageFileUsage;			//页文件使用情况；
-	DWORD_PTR dwPageFileUsagePeak;		//页文件使用峰值；
-
-	List<THREAD_INFO> ltThreadSysInfo;
+	MEMORY_INFO			miMemoryInfo;
+	CPUTIME_INFO		tiCpuTimeInfo;
+	List<THREAD_INFO>	ltThreadInfo;
 
 }PROCESS_INFO,*PPROCESS_INFO,*LPPROCESS_INFO,*PPI,*LPPI;
 
 typedef const PROCESS_INFO *PCPROCESS_INFO, *LPCPROCESS_INFO,*PCPI,*LPCPI;
 
-typedef struct tagPROCCONFIG
-{
-	bool  blIsWin32;
-	ULONG ulCPUPage;
-	TCHAR szUserName[MAX_PATH];
-	TCHAR szProcessName[MAX_PATH];
-
-	DWORD dwThreadsCount;		//线程数目；
-
-	DWORD dwBasePriority;		//进程优先权；
-	DWORD dwProcessID;			//进程标识符；
-	DWORD dwParentProcessId;	//父进程的标识符；
-	DWORD dwHandleCount;		//句柄数目；
-
-	DWORD_PTR dwVirtualBytesPeak;	//虚拟存储峰值大小；
-	DWORD_PTR dwVirtualBytes;		//虚拟存储大小；	
-	ULONG dwPageFaults;			//页故障数目；
-	DWORD_PTR dwWorkingSetPeak;		//工作集峰值大小；
-	DWORD_PTR dwWorkingSet;			//工作集大小；
-
-	DWORD_PTR dwQuotaPeakPagedPoolUsage;	//分页池使用配额峰值；
-	DWORD_PTR dwQuotaPagedPoolUsage;		//分页池使用配额；
-
-	DWORD_PTR dwQuotaPeakNonPagedPoolUsage;	//非分页池使用配额峰值；
-	DWORD_PTR dwQuotaNonPagedPoolUsage;		//非分页池使用配额；
-
-	DWORD_PTR dwPageFileUsage;			//页文件使用情况；
-	DWORD_PTR dwPageFileUsagePeak;		//页文件使用峰值；
-
-}PROCCONFIG, *PPROCCONFIG, *LPPROCCONFIG;
+//typedef struct tagPROCCONFIG
+//{
+//	bool  blIsWin32;
+//	ULONG ulCPUPage;
+//	TCHAR szUserName[MAX_PATH];
+//	TCHAR szProcessName[MAX_PATH];
+//
+//	DWORD dwThreadsCount;		//线程数目；
+//
+//	DWORD dwBasePriority;		//进程优先权；
+//	DWORD dwProcessID;			//进程标识符；
+//	DWORD dwParentProcessId;	//父进程的标识符；
+//	DWORD dwHandleCount;		//句柄数目；
+//
+//	DWORD_PTR dwVirtualBytesPeak;	//虚拟存储峰值大小；
+//	DWORD_PTR dwVirtualBytes;		//虚拟存储大小；	
+//	ULONG dwPageFaults;			//页故障数目；
+//	DWORD_PTR dwWorkingSetPeak;		//工作集峰值大小；
+//	DWORD_PTR dwWorkingSet;			//工作集大小；
+//
+//	DWORD_PTR dwQuotaPeakPagedPoolUsage;	//分页池使用配额峰值；
+//	DWORD_PTR dwQuotaPagedPoolUsage;		//分页池使用配额；
+//
+//	DWORD_PTR dwQuotaPeakNonPagedPoolUsage;	//非分页池使用配额峰值；
+//	DWORD_PTR dwQuotaNonPagedPoolUsage;		//非分页池使用配额；
+//
+//	DWORD_PTR dwPageFileUsage;			//页文件使用情况；
+//	DWORD_PTR dwPageFileUsagePeak;		//页文件使用峰值；
+//
+//}PROCCONFIG, *PPROCCONFIG, *LPPROCCONFIG;
 
 interface IProcEngine : public IUnknown
 {
-	typedef	PROCCONFIG	CONFIG, *PCONFIG, *LPCONFIG;
-	typedef const PCONFIG PCCONFIG, LPCCONFIG;
+	//typedef	PROCCONFIG	CONFIG, *PCONFIG, *LPCONFIG;
+	//typedef const PCONFIG PCCONFIG, LPCCONFIG;
 
 	virtual long __stdcall UpdateProcessInfo(void) = 0;
 	virtual bool __stdcall InjectDllToProcess(DWORD dwProcessId, LPCTSTR lpDllPath) = 0;
 	virtual UINT __stdcall GetCurrentProcessNumber() = 0;
 	virtual PCPI __stdcall GetProcessInfoById(DWORD dwProcessId) = 0;
 	virtual PCPI __stdcall GetProcessInfoByIndex(int index) = 0;
-	virtual LPCCONFIG __stdcall GetProcessConfig(DWORD dwPid = 0xFFFFFFFF) = 0;
+	//virtual LPCCONFIG __stdcall GetProcessConfig(DWORD dwPid = 0xFFFFFFFF) = 0;
 	virtual LPCTSTR GetLastError() = 0;
 };
 

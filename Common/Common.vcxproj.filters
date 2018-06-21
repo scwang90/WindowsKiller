@@ -33,6 +33,15 @@
     <ClInclude Include="MutableList.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Process.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Handle.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Thread.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
