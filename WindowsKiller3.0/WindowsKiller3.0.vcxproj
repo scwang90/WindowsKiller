@@ -210,7 +210,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="WndWizardMgr.h" />
-    <ClInclude Include="FileVersion.h" />
     <ClInclude Include="IWndWizard.h" />
     <ClInclude Include="IWndAttribute.h" />
     <ClInclude Include="IWndExtract.h" />
@@ -241,7 +240,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WndWizardMgr.cpp" />
-    <ClCompile Include="FileVersion.cpp" />
     <ClCompile Include="LinkStatic.cpp" />
     <ClCompile Include="MainFrame.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -269,6 +267,9 @@
     <ClCompile Include="WndWizFindOptionDlg.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="res\Image\arrowcop.cur" />
+    <None Include="res\Image\curhand.cur" />
+    <None Include="res\Image\curnull.cur" />
     <None Include="res\WindowsKiller30.rc2" />
     <None Include="WindowsKiller3.0.htm">
       <DeploymentContent>true</DeploymentContent>
@@ -282,6 +283,9 @@
     <Image Include="res\WindowsKiller3.0.ico" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Common\Common.vcxproj">
+      <Project>{1377c492-703c-4fc4-aadb-d416098e53e0}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\FileEngine\FileEngine.vcxproj">
       <Project>{9f0d3300-d15a-452b-8f12-4c6146bea68a}</Project>
     </ProjectReference>

@@ -7,3 +7,4 @@
 #include "Handle.h"
 #include "Process.h"
 #include "Thread.h"
+#include "FileVersion.h"

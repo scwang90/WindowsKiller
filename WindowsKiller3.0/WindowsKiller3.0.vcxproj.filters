@@ -42,9 +42,6 @@
     <ClInclude Include="WndModuleDlg.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="FileVersion.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="IWndPreview.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -116,9 +113,6 @@
     <ClCompile Include="WndModuleDlg.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="FileVersion.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="WndPreviewDlg.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -174,6 +168,15 @@
   <ItemGroup>
     <None Include="WindowsKiller3.0.htm" />
     <None Include="res\WindowsKiller30.rc2">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\Image\arrowcop.cur">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\Image\curhand.cur">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\Image\curnull.cur">
       <Filter>资源文件</Filter>
     </None>
   </ItemGroup>

@@ -8,11 +8,28 @@ class Process : public Handle {
 	using Handle::Handle;
 
 public:
+	enum Privilege {
+		Query,Read
+	};
+public:
+	Process() = default;
+	Process(Privilege privilege, DWORD dwProcessId) {
+		if (privilege == Query) {
+			OpenWithQuery(dwProcessId);
+		} else {
+			OpenWithRead(dwProcessId);
+		}
+	}
+
+public:
 	Process & Open(DWORD dwDesiredAccess, BOOL bInheritHandle, DWORD dwProcessId) {
 		mHandle = OpenProcess(dwDesiredAccess, bInheritHandle, dwProcessId);
 		return *this;
 	}
 	Process & OpenWithQuery(DWORD dwProcessId) {
+		return Open(PROCESS_QUERY_INFORMATION , TRUE, dwProcessId);
+	}
+	Process & OpenWithRead(DWORD dwProcessId) {
 		return Open(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, dwProcessId);
 	}
 	LPVOID VirtualAllocEx(LPVOID lpAddress, SIZE_T dwSize, DWORD flAllocationType, DWORD flProtect) {
